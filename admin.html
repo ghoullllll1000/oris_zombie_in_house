@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Войти в систему</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap"
+        rel="stylesheet">
+</head>
+<body>
+    <header class="header-container">
+        <div class="header-style">
+            <div>
+                <a>WIKI</a>
+            </div>
+            <div class="nav">
+                <a href="index.html" target="_self">Главная</a>
+                <a>Правила</a>
+                <a>Персонажи</a>
+                <a>Предметы</a>
+                <a>Форум</a>
+                <a href="admin.html" target="_self">Админ-панель</a>
+            </div>
+            <div>
+                <a class="icon"><img src="images/user-round.svg">Профиль</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="admin-container">
+        <h1 class="admin-title">
+            <span>Админ-панель</span>
+        </h1>
+        <div class="admin-content">
+            <div class="table-container">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Название</th>
+                            <th>Тип</th>
+                            <th>Характеристики</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>1</td>
+                            <td>Медик</td>
+                            <td>Выживший</td>
+                            <td>Health: 9, Действия: 3</td>
+                            <td class="actions">
+                                <button class="action-button" aria-label="Редактировать"></button>
+                                <button class="action-button" aria-label="Удалить"></button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>2</td>
+                            <td>Обрез</td>
+                            <td>Предмет</td>
+                            <td>Damage: 2, Range: 1</td>
+                            <td class="actions">
+                                <button class="action-button" aria-label="Редактировать"></button>
+                                <button class="action-button" aria-label="Удалить"></button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>3</td>
+                            <td>Комната 4</td>
+                            <td>Комната</td>
+                            <td>Зомби: 2, Предмет: Дробовик</td>
+                            <td class="actions">
+                                <button class="action-button" aria-label="Редактировать"></button>
+                                <button class="action-button" aria-label="Удалить"></button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>4</td>
+                            <td>Комната 5</td>
+                            <td>Комната</td>
+                            <td>Зомби: 2, Предмет: Дробовик</td>
+                            <td class="actions">
+                                <button class="action-button" aria-label="Редактировать"></button>
+                                <button class="action-button" aria-label="Удалить"></button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>5</td>
+                            <td>Предовый карт</td>
+                            <td>Предмет</td>
+                            <td>Damage: 2, Range: 1</td>
+                            <td class="actions">
+                                <button class="action-button" aria-label="Редактировать"></button>
+                                <button class="action-button" aria-label="Удалить"></button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>6</td>
+                            <td>Предовый карт</td>
+                            <td>Предмет</td>
+                            <td>Зомби: 1, Предмет: Дробовик</td>
+                            <td class="actions">
+                                <button class="action-button" aria-label="Редактировать"></button>
+                                <button class="action-button" aria-label="Удалить"></button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>7</td>
+                            <td>Комната 4</td>
+                            <td>Комната</td>
+                            <td>Зомби: 2, Предмет: Дробовик</td>
+                            <td class="actions">
+                                <button class="action-button" aria-label="Редактировать"></button>
+                                <button class="action-button" aria-label="Удалить"></button>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <aside class="add-panel">
+                <h2>Добавить новую сущность</h2>
+                <form>
+                    <label for="name">Имя</label>
+                    <input type="text" id="name" name="name">
+                    <label for="type">Тип</label>
+                    <select id="type" name="type">
+                        <option value=""></option>
+                        <option value="survivor">Выживший</option>
+                        <option value="item">Предмет</option>
+                        <option value="room">Комната</option>
+                    </select>
+                    <label for="characteristics">Характеристики</label>
+                    <input type="text" id="characteristics" name="characteristics">
+                    <p class="form-hint">
+                        Характеристики 
+                    </p>
+                    <button type="submit" class="add-button">
+                        <span>ДОБАВИТЬ</span>
+                    </button>
+                </form>
+            </aside>
+        </div>
+
+    </div>
+</body>
+</html>
