@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Персонажи</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap"
+          rel="stylesheet">
+</head>
+
+<body>
+    <header class="header-container">
+        <div class="header-style">
+            <div>
+                <a>WIKI</a>
+            </div>
+            <div class="nav">
+                <a href="index.html" target="_self">Главная</a>
+                <a href="about.html" target="_self">Правила</a>
+                <a href="characters.html" target="_self">Персонажи</a>
+                <a href="items.html" target="_self">Предметы</a>
+                <a href="admin.html" target="_self">Админ-панель</a>
+            </div>
+            <div>
+                <a class="icon" href="entrance.html" target="_self"><img src="images/user-round.svg">Профиль</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="page-container">
+        <h1 class="admin-title">Персонажи</h1>
+        <div class="page-content">
+            <section class="characters-grid">
+                <article class="character-card">
+                    <div class="character-avatar">
+                        <img src="images/sasha.png" alt="Саша">
+                    </div>
+                    <div class="character-info">
+                        <h3>Саша</h3>
+                        <p>
+                            Увлекается боевыми искусствами:
+                            у него всегда есть с собой нож
+                        </p>
+                    </div>
+                </article>
+
+                <article class="character-card">
+                    <div class="character-avatar">
+                        <img src="images/nastya.png" alt="Настя">
+                    </div>
+                    <div class="character-info">
+                        <h3>Настя</h3>
+                        <p>
+                            Работает медсестрой: использованная ею
+                            аптечка даёт сразу две жизни
+                        </p>
+                    </div>
+                </article>
+
+                <article class="character-card">
+                    <div class="character-avatar">
+                        <img src="images/nadya.png" alt="Надя">
+                    </div>
+                    <div class="character-info">
+                        <h3>Надя</h3>
+                        <p>
+                            Работает в Полиции: в начале игры
+                            у неё с собой есть пистолет
+                        </p>
+                    </div>
+                </article>
+
+                <article class="character-card">
+                    <div class="character-avatar">
+                        <img src="images/max.png" alt="Макс">
+                    </div>
+                    <div class="character-info">
+                        <h3>Макс</h3>
+                        <p>
+                            К каждому своему ходу
+                            при передвижении может (при желании)
+                            добавлять +1
+                        </p>
+                    </div>
+                </article>
+
+                <article class="character-card">
+                    <div class="character-avatar">
+                        <img src="images/boris.png" alt="Боря">
+                    </div>
+                    <div class="character-info">
+                        <h3>Борис</h3>
+                        <p>
+                            Невероятно здоровый и выносливый:
+                            в начале игры на две жизни больше
+                        </p>
+                    </div>
+                </article>
+
+                <article class="character-card">
+                    <div class="character-avatar">
+                        <img src="images/zombie.png" alt="Зомби">
+                    </div>
+                    <div class="character-info">
+                        <h3>Зомби</h3>
+                        <p>
+                            Нападает на игрока и кусает
+                        </p>
+                    </div>
+                </article>
+
+                <article class="character-card">
+                    <div class="character-avatar">
+                        <img src="images/dog.png" alt="Дьявольский пёс">
+                    </div>
+                    <div class="character-info">
+                        <h3>Дьявольский пёс</h3>
+                        <p>
+                            Нападает на игрока и кусает
+                        </p>
+                    </div>
+                </article>
+
+                <article class="character-card">
+                    <div class="character-avatar">
+                        <img src="images/spider.png" alt="Паук-мутант">
+                    </div>
+                    <div class="character-info">
+                        <h3>Паук-мутант</h3>
+                        <p>
+                            Нападает на игрока и кусает
+                        </p>
+                    </div>
+                </article>
+
+                <article class="character-card">
+                    <div class="character-avatar">
+                        <img src="images/boss.png" alt="Болотный ужас">
+                    </div>
+                    <div class="character-info">
+                        <h3>Болотный ужас</h3>
+                        <p>
+                            Нападает на игрока и кусает
+                            Его можно убить только с помощью гранатомёта
+                        </p>
+                    </div>
+                </article>
+            </section>
+
+            <aside class="filter-panel">
+                <h2>ФИЛЬТР</h2>
+                <form>
+                    <label for="char-type">Тип персонажа</label>
+                    <select id="char-type" name="char-type">
+                        <option value="">---</option>
+                        <option value="survivor">Выживший</option>
+                        <option value="zombie">Зомби</option>
+                    </select>
+                    <label for="ability">Специальная способность</label>
+                    <select id="ability" name="ability">
+                        <option value="">---</option>
+                        <option value="heal">Лечение</option>
+                        <option value="shoot">Меткий выстрел</option>
+                        <option value="repair">Взлом / ремонт</option>
+                    </select>
+                    <button type="submit" class="filter-button">
+                        <span>ФИЛЬТР</span>
+                    </button>
+                </form>
+            </aside>
+        </div>
+    </main>
+</body>
+
+</html>
