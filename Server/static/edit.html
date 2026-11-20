@@ -75,8 +75,10 @@
                 <h2>Редактировать сущность</h2>
                 <form action="/admin/update" method="post">
                     <input type="hidden" name="id" value="${Entity.Id}">
+
                     <label for="name">Имя</label>
                     <input type="text" id="name" name="name" value="${Entity.Name}">
+
                     <label for="type">Тип</label>
                     <select id="type" name="type">
                         <option value=""></option>
@@ -85,8 +87,10 @@
                         <option value="weapon">Оружие</option>
                         <option value="things">Вещь</option>
                     </select>
+
                     <label for="characteristics">Особенности</label>
                     <input type="text" id="characteristics" name="characteristics" value="${Entity.Features}">
+
                     <button type="submit" class="add-button">
                         <span>СОХРАНИТЬ</span>
                     </button>

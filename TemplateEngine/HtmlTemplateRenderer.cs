@@ -120,31 +120,42 @@ namespace TemplateEngine
         {
             if (model == null || string.IsNullOrEmpty(path)) return string.Empty;
 
-            int dotIndex = path.IndexOf('.');
-            if (dotIndex == -1)
-            {
-                if (path.Equals("item", StringComparison.OrdinalIgnoreCase)) return model;
+            if (path.Equals("item", StringComparison.OrdinalIgnoreCase))
+                return model;
 
-                return string.Empty;
+            object? directResult = TryGetPropertyChain(model, path.Split('.'));
+            if (directResult != null)
+                return directResult;
+            int dotIndex = path.IndexOf('.');
+            if (dotIndex != -1)
+            {
+                string withoutPrefix = path.Substring(dotIndex + 1);
+                object? prefixedResult = TryGetPropertyChain(model, withoutPrefix.Split('.'));
+                if (prefixedResult != null)
+                    return prefixedResult;
             }
 
-            string propertyPath = path.Substring(dotIndex + 1);
-            string[] parts = propertyPath.Split('.');
+            return string.Empty;
+        }
 
-            object currentContext = model;
+        private object? TryGetPropertyChain(object root, string[] parts)
+        {
+            object? currentContext = root;
 
             foreach (var part in parts)
             {
-                if (currentContext == null) return string.Empty;
+                if (currentContext == null) return null;
 
                 Type type = currentContext.GetType();
-                PropertyInfo prop = type.GetProperty(part, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+                PropertyInfo? prop = type.GetProperty(
+                    part,
+                    BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
 
-                if (prop == null) return string.Empty;
+                if (prop == null) return null;
                 currentContext = prop.GetValue(currentContext);
             }
 
-            return currentContext ?? string.Empty;
+            return currentContext;
         }
 
         private bool EvaluateCondition(object model, string conditionPath)
