@@ -2,14 +2,14 @@
 using System.Net;
 using TemplateEngine;
 
-namespace Framework
+namespace Framework.Controllers
 {
     public class ControllerBase
     {
         protected HttpListenerContext Context { get; private set; }
         private static readonly IHtmlTemplateRenderer TemplateRenderer = new HtmlTemplateRenderer();
 
-        internal void SetContext(HttpListenerContext context)
+        public void SetContext(HttpListenerContext context)
         {
             Context = context;
         }

@@ -1,5 +1,5 @@
-﻿using Framework;
-using Framework.Attributes;
+﻿using Framework.Attributes;
+using Framework.Controllers;
 using Framework.HttpResponses;
 
 namespace Server.Controllers

@@ -1,4 +1,5 @@
 ﻿using Framework.Attributes;
+using Framework.Controllers;
 using Framework.Core;
 using Framework.HttpResponses;
 using System.Net;
@@ -22,7 +23,19 @@ namespace Framework.Handlers
                 string controllerName = pathParts[0];
                 string methodName = pathParts[1];
 
-                var types = Assembly.GetExecutingAssembly().GetTypes();
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                var types = assemblies.SelectMany(a =>
+                {
+                    try
+                    {
+                        return a.GetTypes();
+                    }
+                    catch (ReflectionTypeLoadException ex)
+                    {
+                        return ex.Types.Where(t => t != null)!;
+                    }
+                });
+
                 Type? controllerType = null;
 
                 foreach (var type in types)
