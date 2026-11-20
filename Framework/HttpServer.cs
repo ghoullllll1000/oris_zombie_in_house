@@ -1,8 +1,7 @@
-﻿using Server.Framework.Handlers;
+﻿using Framework.Handlers;
 using System.Net;
-using System.Text;
 
-namespace Server.Framework
+namespace Framework
 {
     public class HttpServer
     {

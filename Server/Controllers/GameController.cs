@@ -1,6 +1,6 @@
-﻿using Server.Framework;
-using Server.Framework.Attributes;
-using Server.Framework.HttpResponses;
+﻿using Framework;
+using Framework.Attributes;
+using Framework.HttpResponses;
 
 namespace Server.Controllers
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
-namespace Server.Framework.Core
+namespace Framework.Core
 {
     internal static class HttpResponseWriter
     {

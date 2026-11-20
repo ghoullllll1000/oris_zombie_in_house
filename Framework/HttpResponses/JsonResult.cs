@@ -4,7 +4,7 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 
-namespace Server.Framework.HttpResponses
+namespace Framework.HttpResponses
 {
     public class JsonResult : IHttpResponseTypeResult
     {

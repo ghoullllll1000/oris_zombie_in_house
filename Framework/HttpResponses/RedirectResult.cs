@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace Server.Framework.HttpResponses
+namespace Framework.HttpResponses
 {
     public class RedirectResult : IHttpResponseTypeResult
     {

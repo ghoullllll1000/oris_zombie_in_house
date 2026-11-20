@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Server.Framework.Attributes
+namespace Framework.Attributes
 {
     [AttributeUsage(AttributeTargets.Parameter)]
-    public class FormDataAttribute : Attribute
+    public class QueryDataAttribute : Attribute
     {
     }
 }

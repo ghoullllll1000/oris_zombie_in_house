@@ -1,13 +1,8 @@
-﻿using Server.Framework.HttpResponses;
-using System;
-using System.Collections.Generic;
+﻿using Framework.HttpResponses;
 using System.Net;
-using System.IO;
-using System.Text;
-using System.Text.Json;
 using TemplateEngine;
 
-namespace Server.Framework
+namespace Framework
 {
     public class ControllerBase
     {

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Server.Framework.Attributes
+namespace Framework.Attributes
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public class PostAttribute : Attribute
+    public class GetAttribute : Attribute
     {
         public string Route { get; init; }
 
-        public PostAttribute(string route)
+        public GetAttribute(string route)
         {
             Route = route;
         }

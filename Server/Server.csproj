@@ -16,7 +16,7 @@
 		<None Include="static\**" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\TemplateEngine\TemplateEngine.csproj" />
+	  <ProjectReference Include="..\Framework\Framework.csproj" />
 	</ItemGroup>
 
 </Project>

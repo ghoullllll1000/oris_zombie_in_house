@@ -1,7 +1,7 @@
-﻿using Server.Framework;
-using Server.Framework.Attributes;
+﻿using Framework;
+using Framework.Attributes;
 using System.Text.Json;
-using Server.Framework.HttpResponses;
+using Framework.HttpResponses;
 
 
 namespace Server.Controllers

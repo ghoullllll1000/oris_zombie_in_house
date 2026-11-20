@@ -1,13 +1,11 @@
-﻿using Server.Framework.Attributes;
-using Server.Framework.Core;
-using Server.Framework.HttpResponses;
-using System.IO;
+﻿using Framework.Attributes;
+using Framework.Core;
+using Framework.HttpResponses;
 using System.Net;
 using System.Reflection;
-using System.Text;
-using System.Web; 
+using System.Web;
 
-namespace Server.Framework.Handlers
+namespace Framework.Handlers
 {
     internal class ControllerHandler : Handler
     {

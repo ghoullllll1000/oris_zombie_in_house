@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Server.Framework;
-using Server.Framework.Attributes;
-using Server.Framework.HttpResponses;
+﻿using Framework;
+using Framework.Attributes;
+using Framework.HttpResponses;
 using Server.Models;
 
 namespace Server.Controllers

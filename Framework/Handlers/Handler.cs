@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Server.Framework.Handlers
+namespace Framework.Handlers
 {
     abstract class Handler
     {

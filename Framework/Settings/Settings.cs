@@ -1,4 +1,4 @@
-﻿namespace Server.Framework
+﻿namespace Framework
 {
     public class Settings
     {

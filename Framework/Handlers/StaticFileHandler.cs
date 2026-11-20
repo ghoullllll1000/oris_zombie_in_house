@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Text;
 
-namespace Server.Framework.Handlers
+namespace Framework.Handlers
 {
     class StaticFileHandler : Handler
     {

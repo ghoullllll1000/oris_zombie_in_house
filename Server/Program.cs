@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using Server.Framework;
+using Framework;
 
 if (!File.Exists("settings.json"))
 {
