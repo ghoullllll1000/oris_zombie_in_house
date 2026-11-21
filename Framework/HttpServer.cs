@@ -1,4 +1,5 @@
-﻿using Framework.Handlers;
+﻿using Framework.Authentication;
+using Framework.Handlers;
 using System.Net;
 
 namespace Framework
@@ -8,9 +9,9 @@ namespace Framework
         private readonly HttpListener server;
         private bool isRunning;
         private Settings settings;
+        private IUserSessionService userSessionService;
 
-
-        public HttpServer(Settings settings)
+        public HttpServer(Settings settings, IUserSessionService userSessionService)
         {
             server = new HttpListener();
 
@@ -19,6 +20,7 @@ namespace Framework
             server.Prefixes.Add(uriPrefix);
 
             this.settings = settings;
+            this.userSessionService = userSessionService;
         }
 
         public async Task Start()
@@ -60,7 +62,7 @@ namespace Framework
         private async Task HandleRequest(HttpListenerContext context)
         {
             Handler staticFileHandler = new StaticFileHandler();
-            Handler controllerHandler = new ControllerHandler(settings.Server.ConnectionString);
+            Handler controllerHandler = new ControllerHandler(settings.Server.ConnectionString, userSessionService);
             staticFileHandler.Successor = controllerHandler;
 
             Console.WriteLine("Получен запрос.");

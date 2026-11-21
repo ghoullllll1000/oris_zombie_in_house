@@ -19,10 +19,11 @@ namespace Server.Controllers
     {
         private IHttpResponseTypeResult RedirectToLogin()
         {
-            return Redirect("/entrance.html");
+            return Redirect("/auth/login");
         }
 
         [Get("index")]
+        [Authorize]
         public async Task<IHttpResponseTypeResult> Index()
         {
             if (!IsAdminAuthenticated())
@@ -43,6 +44,7 @@ namespace Server.Controllers
         }
 
         [Get("edit")]
+        [Authorize]
         public async Task<IHttpResponseTypeResult> Edit()
         {
             if (!IsAdminAuthenticated())
@@ -76,6 +78,7 @@ namespace Server.Controllers
         }
 
         [Post("create")]
+        [Authorize]
         public async Task<IHttpResponseTypeResult> Create()
         {
             if (!IsAdminAuthenticated())
@@ -140,6 +143,7 @@ namespace Server.Controllers
         }
 
         [Post("update")]
+        [Authorize]
         public async Task<IHttpResponseTypeResult> Update()
         {
             if (!IsAdminAuthenticated())

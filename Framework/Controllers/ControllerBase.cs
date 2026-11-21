@@ -1,4 +1,5 @@
-﻿using Framework.HttpResponses;
+﻿using Framework.Authentication;
+using Framework.HttpResponses;
 using System.Net;
 using TemplateEngine;
 
@@ -9,6 +10,18 @@ namespace Framework.Controllers
         protected HttpListenerContext Context { get; private set; }
         protected string ConnectionString { get; private set; } = string.Empty;
         private static readonly IHtmlTemplateRenderer TemplateRenderer = new HtmlTemplateRenderer();
+        protected IUserSessionService SessionService { get; private set; } = null!;
+
+        public void SetSessionService(IUserSessionService sessionService)
+        {
+            SessionService = sessionService;
+        }
+
+        protected bool IsAdminAuthenticated()
+        {
+            string? sessionId = Context.Request.Cookies["sessionId"]?.Value;
+            return SessionService != null && SessionService.GetUserId(sessionId).HasValue;
+        }
 
         public void SetContext(HttpListenerContext context)
         {
@@ -18,21 +31,6 @@ namespace Framework.Controllers
         public void SetConnectionString(string connectionString)
         {
             ConnectionString = connectionString ?? string.Empty;
-        }
-
-        private const string adminCookieName = "admin_auth";
-        private const string adminCookieValue = "admin_logged_in";
-
-        protected bool IsAdminAuthenticated()
-        {
-            var authCookie = Context.Request.Cookies[adminCookieName];
-            if (authCookie == null || string.IsNullOrWhiteSpace(authCookie.Value))
-            {
-                return false;
-            }
-
-
-            return authCookie.Value == adminCookieValue;
         }
 
         protected JsonResult Json(object obj) => new JsonResult(obj);

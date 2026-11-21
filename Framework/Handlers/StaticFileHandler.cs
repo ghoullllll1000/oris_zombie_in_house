@@ -13,12 +13,7 @@ namespace Framework.Handlers
             string localPath = request.Url?.LocalPath ?? "/";
             string requestUrl = localPath.Trim('/');
 
-            if (string.IsNullOrEmpty(requestUrl))
-            {
-                requestUrl = "index.html";
-            }
-
-            bool isFile = requestUrl.Contains('.');
+            bool isFile = !string.IsNullOrEmpty(requestUrl) && requestUrl.Contains('.');
 
             if (isFile)
             {

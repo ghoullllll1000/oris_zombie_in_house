@@ -1,33 +1,66 @@
 ﻿using Framework.Attributes;
-using System.Text.Json;
-using Framework.HttpResponses;
 using Framework.Controllers;
-
+using Framework.HttpResponses;
+using System.Net;
 
 namespace Server.Controllers
 {
     [HttpController("auth")]
-    public class AuthController  : ControllerBase
+    public class AuthController : ControllerBase
     {
         [Get("login")]
-        public IHttpResponseTypeResult Login() => RenderTemplate("static/entrance.html", new { IsAdmin = IsAdminAuthenticated() });
+        public IHttpResponseTypeResult Login() =>
+            RenderTemplate("static/entrance.html", new
+            {
+                IsAuthenticated = IsAdminAuthenticated(),
+                AuthError = false
+            });
 
         [Post("login")]
         public IHttpResponseTypeResult Login([FormData] string login, [FormData] string password)
         {
-            if (login == "admin" && password == "admin123")
+            if (login?.Trim() == "admin" && password == "admin123")
             {
-                var cookie = new System.Net.Cookie("admin_auth", "admin_logged_in")
-                {
-                    Path = "/",
-                    HttpOnly = true
-                };
-                Context.Response.Cookies.Add(cookie);
+                const int adminUserId = 1;
+                string sessionId = SessionService.CreateSession(adminUserId);
 
-                return Html("<h1>Вход выполнен</h1><p><a href=\"/admin/index\">Перейти в админ-панель</a></p>");
+                var cookie = new Cookie("sessionId", sessionId, "/")
+                {
+                    HttpOnly = true,
+                    Secure = Context.Request.IsSecureConnection,
+                    Expires = DateTime.UtcNow.AddMinutes(30)
+                };
+                Context.Response.SetCookie(cookie);
+
+                return RenderTemplate("static/entrance.html", new
+                {
+                    IsAuthenticated = true,
+                    AuthError = false
+                });
             }
 
-            return Html("<h1>Неверный логин или пароль</h1><p><a href=\"/auth/login\">Вернуться ко входу</a></p>");
+            return RenderTemplate("static/entrance.html", new
+            {
+                IsAuthenticated = false,
+                AuthError = true
+            });
+        }
+
+        [Post("logout")]
+        public IHttpResponseTypeResult Logout()
+        {
+            string? sessionId = Context.Request.Cookies["sessionId"]?.Value;
+            SessionService.RemoveSession(sessionId);
+
+            var cookie = new Cookie("sessionId", string.Empty, "/")
+            {
+                HttpOnly = true,
+                Secure = Context.Request.IsSecureConnection,
+                Expires = DateTime.UtcNow.AddDays(-1)
+            };
+            Context.Response.SetCookie(cookie);
+
+            return Redirect("/auth/login");
         }
     }
 }

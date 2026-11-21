@@ -1,5 +1,7 @@
 ﻿using System.Text.Json;
 using Framework;
+using Framework.Authentication;
+using Server.Services.Authentication;
 
 if (!File.Exists("settings.json"))
 {
@@ -19,7 +21,9 @@ if (setting == null)
     return;
 }
 
-HttpServer server = new HttpServer(setting);
+IUserSessionService userSessionService = new UserSessionService();
+
+HttpServer server = new HttpServer(setting, userSessionService);
 
 Task serverTask = server.Start();
 

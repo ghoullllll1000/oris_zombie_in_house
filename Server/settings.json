@@ -3,6 +3,6 @@
     "Port": "9999",
     "Host": "127.0.0.1",
     "Path": "",
-    "ConnectionString": "Host=<host>;Port=<port>;Database=<db>;Username=<username>;Password=<password>"
+    "ConnectionString": "Host=localhost;Port=5777;Database=zombie_db;Username=postgres;Password=1234qwer!"
   }
 }
