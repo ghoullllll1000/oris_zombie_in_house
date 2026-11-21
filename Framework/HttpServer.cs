@@ -7,6 +7,7 @@ namespace Framework
     {
         private readonly HttpListener server;
         private bool isRunning;
+        private Settings settings;
 
 
         public HttpServer(Settings settings)
@@ -16,6 +17,8 @@ namespace Framework
             string uriPrefix = $"http://{settings.Server.Host}:{settings.Server.Port}/{settings.Server.Path}";
 
             server.Prefixes.Add(uriPrefix);
+
+            this.settings = settings;
         }
 
         public async Task Start()
@@ -57,7 +60,7 @@ namespace Framework
         private async Task HandleRequest(HttpListenerContext context)
         {
             Handler staticFileHandler = new StaticFileHandler();
-            Handler controllerHandler = new ControllerHandler();
+            Handler controllerHandler = new ControllerHandler(settings.Server.ConnectionString);
             staticFileHandler.Successor = controllerHandler;
 
             Console.WriteLine("Получен запрос.");

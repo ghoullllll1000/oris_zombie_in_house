@@ -5,11 +5,18 @@ using Framework.HttpResponses;
 using System.Net;
 using System.Reflection;
 using System.Web;
+using System.Threading.Tasks;
 
 namespace Framework.Handlers
 {
     internal class ControllerHandler : Handler
     {
+        private string connectionString = string.Empty;
+        public ControllerHandler(string connectionString)
+        {
+            this.connectionString = connectionString;
+        }
+
         public override async Task HandleRequest(HttpListenerContext context)
         {
             HttpListenerResponse response = context.Response;
@@ -126,8 +133,17 @@ namespace Framework.Handlers
 
                         ControllerBase controllerInstance = Activator.CreateInstance(controllerType)! as ControllerBase;
                         controllerInstance.SetContext(context);
+                        controllerInstance.SetConnectionString(connectionString);
 
                         object? result = targetMethod.Invoke(controllerInstance, args);
+
+                        if (result is Task task)
+                        {
+                            await task;
+
+                            var resultProperty = task.GetType().GetProperty("Result");
+                            result = resultProperty?.GetValue(task);
+                        }
 
                         if (result is IHttpResponseTypeResult responseResult)
                         {

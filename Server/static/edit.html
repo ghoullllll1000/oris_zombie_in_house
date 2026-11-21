@@ -19,14 +19,16 @@
                 <a>WIKI</a>
             </div>
             <div class="nav">
-                <a href="index.html" target="_self">Главная</a>
-                <a href="about.html" target="_self">Правила</a>
-                <a href="characters.html" target="_self">Персонажи</a>
-                <a href="items.html" target="_self">Предметы</a>
-                <a href="admin.html" target="_self">Админ-панель</a>
+                <a href="/home/index" target="_self">Главная</a>
+                <a href="/home/about" target="_self">Правила</a>
+                <a href="/home/characters" target="_self">Персонажи</a>
+                <a href="/home/items" target="_self">Предметы</a>
+                $if IsAdmin
+                <a href="/admin/index" target="_self">Админ-панель</a>
+                $endif
             </div>
             <div>
-                <a class="icon" href="entrance.html" target="_self"><img src="images/user-round.svg">Профиль</a>
+                <a class="icon" href="/auth/login" target="_self"><img src="images/user-round.svg">Профиль</a>
             </div>
         </div>
     </header>
@@ -48,17 +50,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                    $foreach entity in model.Entities
+                        $foreach entity in model.Entities
                         <tr>
                             <td>${entity.Id}</td>
                             <td>${entity.Name}</td>
                             <td>${entity.Type}</td>
                             <td>${entity.Features}</td>
                             <td class="actions">
-                                <a class="action-button" href="/admin/edit?id=${entity.Id}" aria-label="Редактировать">
+                                <a class="action-button" href="/admin/edit?type=${entity.EntityType}&id=${entity.Id}" aria-label="Редактировать">
                                     <img src="images/update.svg">
                                 </a>
                                 <form action="/admin/delete" method="post" style="display:inline;">
+                                    <input type="hidden" name="type" value="${entity.EntityType}">
                                     <input type="hidden" name="id" value="${entity.Id}">
                                     <button type="submit" class="action-button" aria-label="Удалить">
                                         <img src="images/delete.svg">
@@ -66,7 +69,7 @@
                                 </form>
                             </td>
                         </tr>
-                     $endfor
+                        $endfor
                     </tbody>
                 </table>
             </div>

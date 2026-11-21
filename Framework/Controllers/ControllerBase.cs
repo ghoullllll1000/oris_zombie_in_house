@@ -7,11 +7,32 @@ namespace Framework.Controllers
     public class ControllerBase
     {
         protected HttpListenerContext Context { get; private set; }
+        protected string ConnectionString { get; private set; } = string.Empty;
         private static readonly IHtmlTemplateRenderer TemplateRenderer = new HtmlTemplateRenderer();
 
         public void SetContext(HttpListenerContext context)
         {
             Context = context;
+        }
+
+        public void SetConnectionString(string connectionString)
+        {
+            ConnectionString = connectionString ?? string.Empty;
+        }
+
+        private const string adminCookieName = "admin_auth";
+        private const string adminCookieValue = "admin_logged_in";
+
+        protected bool IsAdminAuthenticated()
+        {
+            var authCookie = Context.Request.Cookies[adminCookieName];
+            if (authCookie == null || string.IsNullOrWhiteSpace(authCookie.Value))
+            {
+                return false;
+            }
+
+
+            return authCookie.Value == adminCookieValue;
         }
 
         protected JsonResult Json(object obj) => new JsonResult(obj);

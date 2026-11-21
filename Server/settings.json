@@ -2,6 +2,7 @@
   "Server": {
     "Port": "9999",
     "Host": "127.0.0.1",
-    "Path": ""
+    "Path": "",
+    "ConnectionString": "Host=<host>;Port=<port>;Database=<db>;Username=<username>;Password=<password>"
   }
 }

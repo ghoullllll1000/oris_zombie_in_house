@@ -33,6 +33,30 @@ public interface IOrmContext
         where T : class, new();
 
     /// <summary>
+    /// Асинхронно получает запись по первичному ключу Id.
+    /// </summary>
+    /// <typeparam name="T">
+    /// Тип модели, в которую преобразуется запись.
+    /// </typeparam>
+    /// <param name="tableName">
+    /// Имя таблицы базы данных.
+    /// </param>
+    /// <param name="id">
+    /// Значение первичного ключа Id.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// Токен отмены операции.
+    /// </param>
+    /// <returns>
+    /// Объект типа <typeparamref name="T"/> или null, если запись не найдена.
+    /// </returns>
+    Task<T?> GetByIdAsync<T>(
+        string tableName,
+        int id,
+        CancellationToken cancellationToken = default)
+        where T : class, new();
+
+    /// <summary>
     /// Асинхронно добавляет запись в указанную таблицу.
     /// </summary>
     /// <typeparam name="T">

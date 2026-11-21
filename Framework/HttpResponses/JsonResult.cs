@@ -21,7 +21,7 @@ namespace Framework.HttpResponses
 
             context.Response.ContentType = "application/json";
             
-            byte[] buffer = Encoding.UTF8.GetBytes(json); //TODO на подумать 
+            byte[] buffer = Encoding.UTF8.GetBytes(json);
 
             return buffer;
         }
