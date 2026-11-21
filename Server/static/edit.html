@@ -77,22 +77,24 @@
             <aside class="add-panel">
                 <h2>Редактировать сущность</h2>
                 <form action="/admin/update" method="post">
-                    <input type="hidden" name="id" value="${Entity.Id}">
+                    <input type="hidden" name="id" value="${Id}">
 
                     <label for="name">Имя</label>
-                    <input type="text" id="name" name="name" value="${Entity.Name}">
+                    <input type="text" id="name" name="name" value="${Name}">
 
                     <label for="type">Тип</label>
                     <select id="type" name="type">
-                        <option value=""></option>
                         <option value="character">Персонаж</option>
-                        <option value="monstr">Монстр</option>
+                        <option value="monster">Монстр</option>
                         <option value="weapon">Оружие</option>
-                        <option value="things">Вещь</option>
+                        <option value="item">Предмет</option>
                     </select>
 
-                    <label for="characteristics">Особенности</label>
-                    <input type="text" id="characteristics" name="characteristics" value="${Entity.Features}">
+                    <label for="category">Категория / тип / здоровье</label>
+                    <input type="text" id="category" name="category" value="${Category}">
+
+                    <label for="description">Особенности</label>
+                    <input type="text" id="description" name="description" value="${Description}">
 
                     <button type="submit" class="add-button">
                         <span>СОХРАНИТЬ</span>
@@ -100,7 +102,6 @@
                 </form>
             </aside>
         </div>
-
     </div>
 </body>
 </html>

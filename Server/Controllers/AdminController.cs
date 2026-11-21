@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using Framework.Attributes;
+﻿using Framework.Attributes;
 using Framework.Controllers;
 using Framework.HttpResponses;
 using ORM;
 using Server.Models;
+using System.Net;
+using System.Text;
+using System.Web;
 
 namespace Server.Controllers
 {
@@ -45,22 +40,17 @@ namespace Server.Controllers
 
         [Get("edit")]
         [Authorize]
-        public async Task<IHttpResponseTypeResult> Edit()
+        public async Task<IHttpResponseTypeResult> Edit([QueryData] string type, [QueryData] int id)
         {
-            if (!IsAdminAuthenticated())
-            {
-                return RedirectToLogin();
-            }
-
-            string? type = Context.Request.QueryString["type"]?.Trim().ToLowerInvariant();
-            if (!int.TryParse(Context.Request.QueryString["id"], out int id))
+            string normalizedType = (type ?? string.Empty).Trim().ToLowerInvariant();
+            if (id <= 0)
             {
                 return Redirect("/admin/index");
             }
 
             IOrmContext orm = new OrmContext(ConnectionString);
 
-            object? entityModel = type switch
+            object? entityModel = normalizedType switch
             {
                 "character" => await BuildCharacterEditModel(orm, id),
                 "monster" => await BuildMonsterEditModel(orm, id),
@@ -79,62 +69,61 @@ namespace Server.Controllers
 
         [Post("create")]
         [Authorize]
-        public async Task<IHttpResponseTypeResult> Create()
+        public async Task<IHttpResponseTypeResult> Create(
+            [FormData] string type,
+            [FormData] string name,
+            [FormData] string category,
+            [FormData] string description,
+            [FormData] int? health)
         {
-            if (!IsAdminAuthenticated())
-            {
-                return RedirectToLogin();
-            }
+            string normalizedType = (type ?? string.Empty).Trim().ToLowerInvariant();
+            string cleanName = (name ?? string.Empty).Trim();
+            string cleanCategory = (category ?? string.Empty).Trim();
+            string cleanDescription = (description ?? string.Empty).Trim();
+            int hp = health.HasValue && health.Value > 0 ? health.Value : 3;
 
-            var form = await ReadFormAsync(Context.Request);
-            string type = GetValue(form, "type").ToLowerInvariant();
-            string name = GetValue(form, "name");
-            string categoryOrType = GetValue(form, "category");
-            string description = GetValue(form, "description");
-            int health = int.TryParse(GetValue(form, "health"), out int hp) ? hp : 3;
-
-            if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(cleanName))
             {
                 return Redirect("/admin/index");
             }
 
             IOrmContext orm = new OrmContext(ConnectionString);
 
-            switch (type)
+            switch (normalizedType)
             {
                 case "character":
                     await orm.InsertAsync("characters", new Character
                     {
-                        Name = name,
-                        Health = health,
-                        Feature = description
+                        Name = cleanName,
+                        Health = hp,
+                        Feature = cleanDescription
                     });
                     break;
 
                 case "monster":
                     await orm.InsertAsync("monsters", new Monster
                     {
-                        Name = name,
-                        Type = string.IsNullOrWhiteSpace(categoryOrType) ? "Обычный" : categoryOrType,
-                        Behavior = description
+                        Name = cleanName,
+                        Type = string.IsNullOrWhiteSpace(cleanCategory) ? "Обычный" : cleanCategory,
+                        Behavior = cleanDescription
                     });
                     break;
 
                 case "weapon":
                     await orm.InsertAsync("weapons", new Weapon
                     {
-                        Name = name,
-                        Category = string.IsNullOrWhiteSpace(categoryOrType) ? "Холодное оружие" : categoryOrType,
-                        Effect = description
+                        Name = cleanName,
+                        Category = string.IsNullOrWhiteSpace(cleanCategory) ? "Холодное оружие" : cleanCategory,
+                        Effect = cleanDescription
                     });
                     break;
 
                 case "item":
                     await orm.InsertAsync("items", new Item
                     {
-                        Name = name,
-                        Usage = string.IsNullOrWhiteSpace(categoryOrType) ? "Здоровье" : categoryOrType,
-                        Effect = description
+                        Name = cleanName,
+                        Usage = string.IsNullOrWhiteSpace(cleanCategory) ? "Здоровье" : cleanCategory,
+                        Effect = cleanDescription
                     });
                     break;
             }
@@ -144,36 +133,36 @@ namespace Server.Controllers
 
         [Post("update")]
         [Authorize]
-        public async Task<IHttpResponseTypeResult> Update()
+        public async Task<IHttpResponseTypeResult> Update(
+            [FormData] int id,
+            [FormData] string type,
+            [FormData] string name,
+            [FormData] string category,
+            [FormData] string description,
+            [FormData] int? health)
         {
-            if (!IsAdminAuthenticated())
-            {
-                return RedirectToLogin();
-            }
-
-            var form = await ReadFormAsync(Context.Request);
-            string type = GetValue(form, "type").ToLowerInvariant();
-            if (!int.TryParse(GetValue(form, "id"), out int id))
+            if (id <= 0)
             {
                 return Redirect("/admin/index");
             }
 
-            string name = GetValue(form, "name");
-            string categoryOrType = GetValue(form, "category");
-            string description = GetValue(form, "description");
-            int health = int.TryParse(GetValue(form, "health"), out int hp) ? hp : 3;
+            string normalizedType = (type ?? string.Empty).Trim().ToLowerInvariant();
+            string cleanName = (name ?? string.Empty).Trim();
+            string cleanCategory = (category ?? string.Empty).Trim();
+            string cleanDescription = (description ?? string.Empty).Trim();
+            int hp = health.HasValue && health.Value > 0 ? health.Value : 3;
 
             IOrmContext orm = new OrmContext(ConnectionString);
 
-            switch (type)
+            switch (normalizedType)
             {
                 case "character":
                     await orm.UpdateAsync("characters", id, new Character
                     {
                         Id = id,
-                        Name = name,
-                        Health = health,
-                        Feature = description
+                        Name = cleanName,
+                        Health = hp,
+                        Feature = cleanDescription
                     });
                     break;
 
@@ -181,9 +170,9 @@ namespace Server.Controllers
                     await orm.UpdateAsync("monsters", id, new Monster
                     {
                         Id = id,
-                        Name = name,
-                        Type = categoryOrType,
-                        Behavior = description
+                        Name = cleanName,
+                        Type = cleanCategory,
+                        Behavior = cleanDescription
                     });
                     break;
 
@@ -191,9 +180,9 @@ namespace Server.Controllers
                     await orm.UpdateAsync("weapons", id, new Weapon
                     {
                         Id = id,
-                        Name = name,
-                        Category = categoryOrType,
-                        Effect = description
+                        Name = cleanName,
+                        Category = cleanCategory,
+                        Effect = cleanDescription
                     });
                     break;
 
@@ -201,9 +190,9 @@ namespace Server.Controllers
                     await orm.UpdateAsync("items", id, new Item
                     {
                         Id = id,
-                        Name = name,
-                        Usage = categoryOrType,
-                        Effect = description
+                        Name = cleanName,
+                        Usage = cleanCategory,
+                        Effect = cleanDescription
                     });
                     break;
             }
@@ -212,21 +201,16 @@ namespace Server.Controllers
         }
 
         [Post("delete")]
-        public async Task<IHttpResponseTypeResult> Delete()
+        [Authorize]
+        public async Task<IHttpResponseTypeResult> Delete([FormData] string type, [FormData] int id)
         {
-            if (!IsAdminAuthenticated())
-            {
-                return RedirectToLogin();
-            }
-
-            var form = await ReadFormAsync(Context.Request);
-            string type = GetValue(form, "type").ToLowerInvariant();
-            if (!int.TryParse(GetValue(form, "id"), out int id))
+            if (id <= 0)
             {
                 return Redirect("/admin/index");
             }
 
-            string? tableName = type switch
+            string normalizedType = (type ?? string.Empty).Trim().ToLowerInvariant();
+            string? tableName = normalizedType switch
             {
                 "character" => "characters",
                 "monster" => "monsters",
@@ -303,7 +287,7 @@ namespace Server.Controllers
                 EntityType = "item",
                 entity.Id,
                 entity.Name,
-                Category = entity.Effect,
+                Category = entity.Usage,
                 Description = entity.Effect
             };
         }
