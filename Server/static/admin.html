@@ -45,7 +45,7 @@
                 <table class="admin-table">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>№</th>
                             <th>Название</th>
                             <th>Тип</th>
                             <th>Особенности</th>
@@ -55,7 +55,7 @@
                     <tbody>
                         $foreach entity in model.Entities
                         <tr>
-                            <td>${entity.Id}</td>
+                            <td>${entity.Number}</td>
                             <td>${entity.Name}</td>
                             <td>${entity.Type}</td>
                             <td>${entity.Features}</td>
@@ -64,7 +64,7 @@
                                    aria-label="Редактировать">
                                     <img src="images/update.svg">
                                 </a>
-                                <form action="/admin/delete" method="post" style="display:inline;">
+                                <form action="/admin/delete" method="post" class="delete-form" style="display:inline;">
                                     <input type="hidden" name="type" value="${entity.EntityType}">
                                     <input type="hidden" name="id" value="${entity.Id}">
                                     <button type="submit" class="action-button" aria-label="Удалить">

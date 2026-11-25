@@ -102,6 +102,39 @@
         }
     });
 
+    document.addEventListener('submit', async function (event) {
+        const deleteForm = event.target.closest('.delete-form');
+
+        if (!deleteForm) {
+            return;
+        }
+
+        event.preventDefault();
+
+        try {
+            const formData = new FormData(deleteForm);
+
+            const response = await fetch(deleteForm.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: new URLSearchParams(formData)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                deleteForm.closest('tr').remove();
+            } else {
+                alert(result.message);
+            }
+        } catch (error) {
+            alert('Не удалось удалить запись. Попробуйте ещё раз.');
+            console.error(error);
+        }
+    });
+
     typeSelect.addEventListener('change', updateField);
     updateField();
 })();

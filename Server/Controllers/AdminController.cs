@@ -263,10 +263,15 @@ namespace Server.Controllers
         {
             if (id <= 0)
             {
-                return Redirect("/admin/index");
+                return Json(new
+                {
+                    success = false,
+                    message = "Некорректный ID записи."
+                });
             }
 
             string normalizedType = (type ?? string.Empty).Trim().ToLowerInvariant();
+
             string? tableName = normalizedType switch
             {
                 "character" => "characters",
@@ -276,13 +281,23 @@ namespace Server.Controllers
                 _ => null
             };
 
-            if (tableName != null)
+            if (tableName == null)
             {
-                IOrmContext orm = new OrmContext(ConnectionString);
-                await orm.DeleteAsync(tableName, id);
+                return Json(new
+                {
+                    success = false,
+                    message = "Неизвестный тип записи."
+                });
             }
 
-            return Redirect("/admin/index");
+            IOrmContext orm = new OrmContext(ConnectionString);
+            await orm.DeleteAsync(tableName, id);
+
+            return Json(new
+            {
+                success = true,
+                message = "Запись успешно удалена."
+            });
         }
 
         private static async Task<object?> BuildCharacterEditModel(IOrmContext orm, int id, List<object> entities, string error = "")
@@ -358,6 +373,7 @@ namespace Server.Controllers
             };
         }
 
+
         private static async Task<List<object>> LoadAllEntitiesAsync(IOrmContext orm)
         {
             var characters = (await orm.GetAllAsync<Character>("characters")).OrderBy(x => x.Id);
@@ -366,9 +382,11 @@ namespace Server.Controllers
             var items = (await orm.GetAllAsync<Item>("items")).OrderBy(x => x.Id);
 
             var result = new List<object>();
+            int number = 1;
 
             result.AddRange(characters.Select(c => new
             {
+                Number = number++,
                 c.Id,
                 c.Name,
                 Type = "Персонаж",
@@ -378,6 +396,7 @@ namespace Server.Controllers
 
             result.AddRange(monsters.Select(m => new
             {
+                Number = number++,
                 m.Id,
                 m.Name,
                 Type = "Монстр",
@@ -387,6 +406,7 @@ namespace Server.Controllers
 
             result.AddRange(weapons.Select(w => new
             {
+                Number = number++,
                 w.Id,
                 w.Name,
                 Type = "Оружие",
@@ -396,6 +416,7 @@ namespace Server.Controllers
 
             result.AddRange(items.Select(i => new
             {
+                Number = number++,
                 i.Id,
                 i.Name,
                 Type = "Предмет",
@@ -405,6 +426,7 @@ namespace Server.Controllers
 
             return result;
         }
+
 
         private static async Task<Dictionary<string, string>> ReadFormAsync(HttpListenerRequest request)
         {

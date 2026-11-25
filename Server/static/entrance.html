@@ -41,19 +41,18 @@
             <form class="login-form" action="/auth/login" method="post">
                 <div class="login-input">
                     <a><img src="images/Key icon.svg"></a>
-                    <input type="text" name="login" placeholder="ИМЯ ПОЛЬЗОВАТЕЛЯ / ЛОГИН">
+                    <input type="text" name="login" placeholder="ИМЯ ПОЛЬЗОВАТЕЛЯ / ЛОГИН" value="${Login}">
                 </div>
-
+                <span class="login-field-error">${LoginError}</span>
                 <div class="login-input">
                     <a><img src="images/Lock icon.svg"></a>
                     <input type="password" name="password" placeholder="ПАРОЛЬ / КЛЮЧ">
                 </div>
-
+                <span class="login-field-error">${PasswordError} ${AuthError}</span>
                 <label class="remember-me">
                     <input type="checkbox">
                     <span>Запомнить меня</span>
                 </label>
-
                 <button type="submit" class="login-button">
                     ВОЙТИ
                 </button>

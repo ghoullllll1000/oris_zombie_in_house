@@ -10,16 +10,49 @@ namespace Server.Controllers
     {
         [Get("login")]
         public IHttpResponseTypeResult Login() =>
-            RenderTemplate("static/entrance.html", new
-            {
-                IsAuthenticated = IsAdminAuthenticated(),
-                AuthError = false
-            });
+        RenderTemplate("static/entrance.html", new
+        {
+            IsAdmin = IsAdminAuthenticated(),
+            Login = "",
+            LoginError = "",
+            PasswordError = "",
+            AuthError = ""
+        });
+
 
         [Post("login")]
         public IHttpResponseTypeResult Login([FormData] string login, [FormData] string password)
         {
-            if (login?.Trim() == "admin" && password == "admin123")
+            login = login?.Trim() ?? string.Empty;
+            password ??= string.Empty;
+
+            string loginError = "";
+            string passwordError = "";
+            string authError = "";
+
+            if (string.IsNullOrEmpty(login))
+            {
+                loginError = "Введите логин.";
+            }
+
+            if (string.IsNullOrEmpty(password))
+            {
+                passwordError = "Введите пароль.";
+            }
+
+            if (loginError != "" || passwordError != "")
+            {
+                return RenderTemplate("static/entrance.html", new
+                {
+                    IsAdmin = false,
+                    Login = login,
+                    LoginError = loginError,
+                    PasswordError = passwordError,
+                    AuthError = authError
+                });
+            }
+
+            if (login == "admin" && password == "admin123")
             {
                 const int adminUserId = 1;
                 string sessionId = SessionService.CreateSession(adminUserId);
@@ -30,15 +63,21 @@ namespace Server.Controllers
                     Secure = Context.Request.IsSecureConnection,
                     Expires = DateTime.UtcNow.AddMinutes(30)
                 };
+
                 Context.Response.SetCookie(cookie);
 
                 return Redirect("/admin/index");
             }
 
+            authError = "Неверный логин или пароль.";
+
             return RenderTemplate("static/entrance.html", new
             {
-                IsAuthenticated = false,
-                AuthError = true
+                IsAdmin = false,
+                Login = login,
+                LoginError = loginError,
+                PasswordError = passwordError,
+                AuthError = authError
             });
         }
 
