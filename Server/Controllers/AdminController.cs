@@ -3,9 +3,11 @@ using Framework.Controllers;
 using Framework.HttpResponses;
 using ORM;
 using Server.Models;
+using Server.Validation;
 using System.Net;
 using System.Text;
 using System.Web;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Server.Controllers
 {
@@ -32,7 +34,8 @@ namespace Server.Controllers
             var model = new
             {
                 IsAdmin = true,
-                Entities = entities
+                Entities = entities,
+                Error = ""
             };
 
             return RenderTemplate("static/admin.html", model);
@@ -50,12 +53,14 @@ namespace Server.Controllers
 
             IOrmContext orm = new OrmContext(ConnectionString);
 
+            var entities = await LoadAllEntitiesAsync(orm);
+
             object? entityModel = normalizedType switch
             {
-                "character" => await BuildCharacterEditModel(orm, id),
-                "monster" => await BuildMonsterEditModel(orm, id),
-                "weapon" => await BuildWeaponEditModel(orm, id),
-                "item" => await BuildItemEditModel(orm, id),
+                "character" => await BuildCharacterEditModel(orm, id, entities),
+                "monster" => await BuildMonsterEditModel(orm, id, entities),
+                "weapon" => await BuildWeaponEditModel(orm, id, entities),
+                "item" => await BuildItemEditModel(orm, id, entities),
                 _ => null
             };
 
@@ -67,6 +72,7 @@ namespace Server.Controllers
             return RenderTemplate("static/edit.html", entityModel);
         }
 
+
         [Post("create")]
         [Authorize]
         public async Task<IHttpResponseTypeResult> Create(
@@ -76,15 +82,34 @@ namespace Server.Controllers
             [FormData] string description,
             [FormData] int? health)
         {
-            string normalizedType = (type ?? string.Empty).Trim().ToLowerInvariant();
-            string cleanName = (name ?? string.Empty).Trim();
-            string cleanCategory = (category ?? string.Empty).Trim();
-            string cleanDescription = (description ?? string.Empty).Trim();
-            int hp = health.HasValue && health.Value > 0 ? health.Value : 3;
+            string normalizedType = (type ?? "").Trim().ToLowerInvariant();
+            string cleanName = (name ?? "").Trim();
+            string cleanCategory = (category ?? "").Trim();
+            string cleanDescription = (description ?? "").Trim();
 
-            if (string.IsNullOrWhiteSpace(cleanName))
+            EntityValidator validator = new EntityValidator();
+
+            List<string> errors = validator.Validate(
+                normalizedType,
+                cleanName,
+                cleanCategory,
+                cleanDescription,
+                health
+            );
+
+            if (errors.Count > 0)
             {
-                return Redirect("/admin/index");
+                IOrmContext errorOrm = new OrmContext(ConnectionString);
+                var entities = await LoadAllEntitiesAsync(errorOrm);
+
+                var model = new
+                {
+                    IsAdmin = true,
+                    Entities = entities,
+                    Error = string.Join(" ", errors)
+                };
+
+                return RenderTemplate("static/admin.html", model);
             }
 
             IOrmContext orm = new OrmContext(ConnectionString);
@@ -95,7 +120,7 @@ namespace Server.Controllers
                     await orm.InsertAsync("characters", new Character
                     {
                         Name = cleanName,
-                        Health = hp,
+                        Health = health.Value,
                         Feature = cleanDescription
                     });
                     break;
@@ -150,7 +175,39 @@ namespace Server.Controllers
             string cleanName = (name ?? string.Empty).Trim();
             string cleanCategory = (category ?? string.Empty).Trim();
             string cleanDescription = (description ?? string.Empty).Trim();
-            int hp = health.HasValue && health.Value > 0 ? health.Value : 3;
+
+            EntityValidator validator = new EntityValidator();
+
+            List<string> errors = validator.Validate(
+                normalizedType,
+                cleanName,
+                cleanCategory,
+                cleanDescription,
+                health
+            );
+
+            if (errors.Count > 0)
+            {
+                IOrmContext errorOrm = new OrmContext(ConnectionString);
+                var entities = await LoadAllEntitiesAsync(errorOrm);
+                var model = new
+                {
+                    IsAdmin = true,
+                    Entities = entities,
+                    EntityType = normalizedType,
+                    Id = id,
+                    Name = cleanName,
+                    Category = normalizedType == "character"
+                        ? (health.HasValue ? health.Value.ToString() : cleanCategory)
+                        : cleanCategory,
+                    Description = cleanDescription,
+                    Error = string.Join(" ", errors)
+                };
+
+                return RenderTemplate("static/edit.html", model);
+            }
+
+            int hp = health.HasValue ? health.Value : 3;
 
             IOrmContext orm = new OrmContext(ConnectionString);
 
@@ -228,23 +285,26 @@ namespace Server.Controllers
             return Redirect("/admin/index");
         }
 
-        private static async Task<object?> BuildCharacterEditModel(IOrmContext orm, int id)
+        private static async Task<object?> BuildCharacterEditModel(IOrmContext orm, int id, List<object> entities, string error = "")
         {
             var entity = (await orm.GetAllAsync<Character>("characters")).FirstOrDefault(x => x.Id == id);
+
             if (entity == null) return null;
 
             return new
             {
                 IsAdmin = true,
+                Entities = entities,
                 EntityType = "character",
                 entity.Id,
                 entity.Name,
                 Category = entity.Health.ToString(),
-                Description = entity.Feature
+                Description = entity.Feature,
+                Error = error
             };
         }
 
-        private static async Task<object?> BuildMonsterEditModel(IOrmContext orm, int id)
+        private static async Task<object?> BuildMonsterEditModel(IOrmContext orm, int id, List<object> entities, string error = "")
         {
             var entity = (await orm.GetAllAsync<Monster>("monsters")).FirstOrDefault(x => x.Id == id);
             if (entity == null) return null;
@@ -252,15 +312,17 @@ namespace Server.Controllers
             return new
             {
                 IsAdmin = true,
+                Entities = entities,
                 EntityType = "monster",
                 entity.Id,
                 entity.Name,
                 Category = entity.Type,
-                Description = entity.Behavior
+                Description = entity.Behavior,
+                Error = error
             };
         }
 
-        private static async Task<object?> BuildWeaponEditModel(IOrmContext orm, int id)
+        private static async Task<object?> BuildWeaponEditModel(IOrmContext orm, int id, List<object> entities, string error = "")
         {
             var entity = (await orm.GetAllAsync<Weapon>("weapons")).FirstOrDefault(x => x.Id == id);
             if (entity == null) return null;
@@ -268,15 +330,17 @@ namespace Server.Controllers
             return new
             {
                 IsAdmin = true,
+                Entities = entities,
                 EntityType = "weapon",
                 entity.Id,
                 entity.Name,
                 Category = entity.Category,
-                Description = entity.Effect
+                Description = entity.Effect,
+                Error = error
             };
         }
 
-        private static async Task<object?> BuildItemEditModel(IOrmContext orm, int id)
+        private static async Task<object?> BuildItemEditModel(IOrmContext orm, int id, List<object> entities, string error = "")
         {
             var entity = (await orm.GetAllAsync<Item>("items")).FirstOrDefault(x => x.Id == id);
             if (entity == null) return null;
@@ -284,11 +348,13 @@ namespace Server.Controllers
             return new
             {
                 IsAdmin = true,
+                Entities = entities,
                 EntityType = "item",
                 entity.Id,
                 entity.Name,
                 Category = entity.Usage,
-                Description = entity.Effect
+                Description = entity.Effect,
+                Error = error
             };
         }
 

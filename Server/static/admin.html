@@ -80,7 +80,7 @@
 
             <aside class="add-panel">
                 <h2>Добавить новую сущность</h2>
-                <form action="/admin/create" method="post">
+                <form action="/admin/create" method="post" novalidate>
                     <label for="name">Имя</label>
                     <input type="text" id="name" name="name" required>
 
@@ -104,6 +104,9 @@
                         <span>ДОБАВИТЬ</span>
                     </button>
                 </form>
+                <div>
+                    ${Error}
+                </div>
             </aside>
         </div>
 

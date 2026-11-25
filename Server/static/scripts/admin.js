@@ -3,6 +3,8 @@
     const container = document.getElementById('dynamic-field-container');
     const label = document.getElementById('dynamic-field-label');
     const form = document.querySelector('.add-panel form');
+    const description = document.getElementById('characteristics');
+    const name = document.getElementById('name');
 
     const configs = {
         character: {
@@ -61,10 +63,9 @@
         container.style.display = '';
     }
 
-    const description = document.getElementById('characteristics');
-
     form.addEventListener('submit', function (event) {
         const dynamicField = document.getElementById('dynamic-field-input');
+        const name = document.getElementById('name');
 
         if (!typeSelect.value) {
             event.preventDefault();
@@ -79,6 +80,24 @@
         if (!description.value.trim()) {  
             event.preventDefault();
             alert('Заполните описание!');
+            return;
+        }
+
+        if (!name.value.trim()) {
+            event.preventDefault();
+            alert('Введите имя!');
+            return;
+        }
+
+        if (name.value.trim().length < 2 || name.value.trim().length > 100) {
+            event.preventDefault();
+            alert('Имя должно содержать от 2 до 100 символов!');
+            return;
+        }
+
+        if (!/^[а-яА-ЯёЁa-zA-Z0-9 -]+$/.test(name.value.trim())) {
+            event.preventDefault();
+            alert('Имя содержит недопустимые символы!');
             return;
         }
     });

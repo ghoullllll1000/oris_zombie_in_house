@@ -78,6 +78,8 @@
                 <h2>Редактировать сущность</h2>
                 <form action="/admin/update" method="post">
                     <input type="hidden" name="id" value="${Id}">
+                    <input type="hidden" id="current-type" value="${EntityType}">
+                    <input type="hidden" id="current-category" value="${Category}">
 
                     <label for="name">Имя</label>
                     <input type="text" id="name" name="name" value="${Name}">
@@ -90,18 +92,28 @@
                         <option value="item">Предмет</option>
                     </select>
 
-                    <label for="category">Категория / тип / здоровье</label>
-                    <input type="text" id="category" name="category" value="${Category}">
+                    <div id="dynamic-field-container">
+                        <label id="dynamic-field-label" for="dynamic-field-input">
+                            Категория
+                        </label>
+                    </div>
 
-                    <label for="description">Особенности</label>
-                    <input type="text" id="description" name="description" value="${Description}">
+                    <label for="characteristics">Особенности</label>
+                    <input type="text" id="characteristics" name="description"
+                           value="${Description}">
 
                     <button type="submit" class="add-button">
                         <span>СОХРАНИТЬ</span>
                     </button>
                 </form>
+
+                <div class="validation-error">
+                    ${Error}
+                </div>
             </aside>
         </div>
     </div>
+
+    <script src="scripts/edit.js"></script>
 </body>
 </html>
