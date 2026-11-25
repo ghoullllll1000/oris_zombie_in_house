@@ -1,7 +1,7 @@
-﻿using System.Text.Json;
-using Framework;
+﻿using Framework;
 using Framework.Authentication;
 using Server.Services.Authentication;
+using System.Text.Json;
 
 if (!File.Exists("settings.json"))
 {

@@ -590,8 +590,6 @@
 }
 
 
-
-
 .login-page {
     min-height: 700px;
     padding: 0px 20px 20px;
@@ -611,9 +609,7 @@
     background: #362c27;
     border: 8px solid #76513A;
     border-radius: 20px;
-    box-shadow:
-        0 0 15px #000,
-        inset 0 0 15px #000;
+    box-shadow: 0 0 15px #000 inset 0 0 15px #000;
 }
 
 .login-panel {
@@ -635,6 +631,13 @@
 }
 
 .login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.live-form {
     display: flex;
     flex-direction: column;
     align-items: center;
