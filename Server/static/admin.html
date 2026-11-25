@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <base href="/">
@@ -9,9 +10,11 @@
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap"
-          rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <header class="header-container">
         <div class="header-style">
@@ -57,7 +60,8 @@
                             <td>${entity.Type}</td>
                             <td>${entity.Features}</td>
                             <td class="actions">
-                                <a class="action-button" href="/admin/edit?type=${entity.EntityType}&id=${entity.Id}" aria-label="Редактировать">
+                                <a class="action-button" href="/admin/edit?type=${entity.EntityType}&id=${entity.Id}"
+                                   aria-label="Редактировать">
                                     <img src="images/update.svg">
                                 </a>
                                 <form action="/admin/delete" method="post" style="display:inline;">
@@ -78,17 +82,24 @@
                 <h2>Добавить новую сущность</h2>
                 <form action="/admin/create" method="post">
                     <label for="name">Имя</label>
-                    <input type="text" id="name" name="name">
+                    <input type="text" id="name" name="name" required>
+
                     <label for="type">Тип</label>
-                    <select id="type" name="type">
+                    <select id="type" name="type" required>
                         <option value=""></option>
                         <option value="character">Персонаж</option>
-                        <option value="monstr">Монстр</option>
+                        <option value="monster">Монстр</option>
                         <option value="weapon">Оружие</option>
-                        <option value="things">Вещь</option>
+                        <option value="item">Вещь</option>
                     </select>
-                    <label for="characteristics">Особенности</label>
-                    <input type="text" id="characteristics" name="characteristics">
+
+                    <div id="dynamic-field-container" style="display: none;">
+                        <label id="dynamic-field-label" for="dynamic-field-input"></label>
+                    </div>
+
+                    <label for="characteristics">Описание</label>
+                    <input type="text" id="characteristics" name="description" required>
+
                     <button type="submit" class="add-button">
                         <span>ДОБАВИТЬ</span>
                     </button>
@@ -97,5 +108,8 @@
         </div>
 
     </div>
+
+    <script src="scripts/admin.js"></script>
 </body>
+
 </html>

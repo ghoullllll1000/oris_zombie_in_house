@@ -32,11 +32,7 @@ namespace Server.Controllers
                 };
                 Context.Response.SetCookie(cookie);
 
-                return RenderTemplate("static/entrance.html", new
-                {
-                    IsAuthenticated = true,
-                    AuthError = false
-                });
+                return Redirect("/admin/index");
             }
 
             return RenderTemplate("static/entrance.html", new

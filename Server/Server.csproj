@@ -19,5 +19,8 @@
 	  <ProjectReference Include="..\Framework\Framework.csproj" />
 	  <ProjectReference Include="..\ORM\ORM.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="static\scripts\" />
+	</ItemGroup>
 
 </Project>
