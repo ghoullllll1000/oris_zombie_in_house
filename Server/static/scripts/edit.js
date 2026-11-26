@@ -76,6 +76,8 @@
 
     form.addEventListener('submit', function (event) {
         const dynamicField = document.getElementById('dynamic-field-input');
+        const regexName = /^[а-яА-ЯёЁa-zA-Z0-9 -]+$/;
+        const descriptionRegex = /^[а-яА-ЯёЁa-zA-Z0-9\s.,!?():;"'«»\-+/]+$/;
 
         if (!dynamicField || !dynamicField.value) {
             event.preventDefault();
@@ -95,7 +97,7 @@
             return;
         }
 
-        if (!/^[а-яА-ЯёЁa-zA-Z0-9 -]+$/.test(name.value.trim())) {
+        if (!regexName.test(name.value.trim())) {
             event.preventDefault();
             alert('Имя содержит недопустимые символы!');
             return;
@@ -104,6 +106,12 @@
         if (!description.value.trim()) {
             event.preventDefault();
             alert('Заполните описание!');
+        }
+
+        if (!descriptionRegex.test(description.value.trim())) {
+            event.preventDefault();
+            alert('Описание содержит недопустимые символы!');
+            return;
         }
     });
 })();

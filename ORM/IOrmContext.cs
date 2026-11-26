@@ -127,4 +127,27 @@ public interface IOrmContext
         string tableName,
         int id,
         CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<T>> GetRelatedAsync<T>(
+    string tableName,
+    string foreignKeyColumn,
+    int parentId,
+    CancellationToken cancellationToken = default)
+    where T : class, new();
+
+    Task<T?> GetRelatedOneAsync<T>(
+        string tableName,
+        string foreignKeyColumn,
+        int parentId,
+        CancellationToken cancellationToken = default)
+        where T : class, new();
+
+    Task<IReadOnlyList<T>> GetManyToManyAsync<T>(
+        string tableName,
+        string joinTable,
+        string parentForeignKey,
+        string relatedForeignKey,
+        int parentId,
+        CancellationToken cancellationToken = default)
+        where T : class, new();
 }

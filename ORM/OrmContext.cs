@@ -9,6 +9,7 @@ namespace ORM
 {
     public class OrmContext : IOrmContext
     {
+
         private readonly string _connectionString;
 
         public OrmContext(string connectionString)
@@ -23,6 +24,7 @@ namespace ORM
             where T : class, new()
         {
             EntityMetadata metadata = new(typeof(T));
+            ValidateTableName(tableName, metadata);
             string safeTableName = EscapeIdentifier(metadata.TableName);
             string sql = $"SELECT * FROM {safeTableName}";
             var result = new List<T>();
@@ -48,6 +50,7 @@ namespace ORM
             where T : class, new()
         {
             EntityMetadata metadata = new(typeof(T));
+            ValidateTableName(tableName, metadata);
 
             string safeTableName = EscapeIdentifier(metadata.TableName);
             string primaryKey = EscapeIdentifier(metadata.GetColumnName(metadata.PrimaryKey));
@@ -77,6 +80,7 @@ namespace ORM
             where T : class
         {
             EntityMetadata metadata = new(typeof(T));
+            ValidateTableName(tableName, metadata);
             OrmEntityValidator.Validate(entity);
 
             PropertyInfo[] properties = metadata.Properties.Where(p => p != metadata.PrimaryKey).ToArray();
@@ -104,6 +108,7 @@ namespace ORM
             where T : class
         {
             EntityMetadata metadata = new(typeof(T));
+            ValidateTableName(tableName, metadata);
             OrmEntityValidator.Validate(entity);
 
             PropertyInfo[] properties = metadata.Properties.Where(p => p != metadata.PrimaryKey).ToArray();
@@ -224,6 +229,146 @@ namespace ORM
                 throw new ArgumentException("Недопустимое имя SQL-идентификатора.", nameof(identifier));
             }
             return $"\"{identifier}\"";
+        }
+
+        private static void ValidateTableName(string tableName, EntityMetadata metadata)
+        {
+            if (!string.Equals(
+                tableName,
+                metadata.TableName,
+                StringComparison.OrdinalIgnoreCase))
+            {
+                throw new ArgumentException(
+                    $"Таблица {tableName} не соответствует модели {metadata.TableName}.");
+            }
+
+        }
+
+        private static void ValidateColumnName(
+            string columnName,
+            EntityMetadata metadata)
+        {
+            bool exists = metadata.Properties.Any(p =>
+                string.Equals(
+                    metadata.GetColumnName(p),
+                    columnName,
+                    StringComparison.OrdinalIgnoreCase));
+
+            if (!exists)
+            {
+                throw new ArgumentException(
+                    $"Столбец {columnName} не найден в модели {metadata.TableName}.");
+            }
+        }
+
+        public async Task<IReadOnlyList<T>> GetRelatedAsync<T>(
+            string tableName,
+            string foreignKeyColumn,
+            int parentId,
+            CancellationToken cancellationToken = default)
+            where T : class, new()
+        {
+            EntityMetadata metadata = new(typeof(T));
+            ValidateTableName(tableName, metadata);
+            ValidateColumnName(foreignKeyColumn, metadata);
+
+            string sql =
+                $"SELECT * FROM {EscapeIdentifier(metadata.TableName)} " +
+                $"WHERE {EscapeIdentifier(foreignKeyColumn)} = @id";
+
+            var result = new List<T>();
+
+            await using var connection = new NpgsqlConnection(_connectionString);
+            await connection.OpenAsync(cancellationToken);
+
+            await using var command = new NpgsqlCommand(sql, connection);
+            command.Parameters.AddWithValue("id", parentId);
+
+            await using var reader =
+                await command.ExecuteReaderAsync(cancellationToken);
+
+            var columns = GetColumns(reader);
+
+            while (await reader.ReadAsync(cancellationToken))
+            {
+                result.Add(MapRow<T>(reader, metadata, columns));
+            }
+
+            return result;
+        }
+
+        public async Task<T?> GetRelatedOneAsync<T>(
+            string tableName,
+            string foreignKeyColumn,
+            int parentId,
+            CancellationToken cancellationToken = default)
+            where T : class, new()
+        {
+            EntityMetadata metadata = new(typeof(T));
+            ValidateTableName(tableName, metadata);
+            ValidateColumnName(foreignKeyColumn, metadata);
+
+            string sql =
+                $"SELECT * FROM {EscapeIdentifier(metadata.TableName)} " +
+                $"WHERE {EscapeIdentifier(foreignKeyColumn)} = @id LIMIT 1";
+
+            await using var connection = new NpgsqlConnection(_connectionString);
+            await connection.OpenAsync(cancellationToken);
+
+            await using var command = new NpgsqlCommand(sql, connection);
+            command.Parameters.AddWithValue("id", parentId);
+
+            await using var reader =
+                await command.ExecuteReaderAsync(cancellationToken);
+
+            if (!await reader.ReadAsync(cancellationToken))
+                return null;
+
+            var columns = GetColumns(reader);
+
+            return MapRow<T>(reader, metadata, columns);
+        }
+
+        public async Task<IReadOnlyList<T>> GetManyToManyAsync<T>(
+            string tableName,
+            string joinTable,
+            string parentForeignKey,
+            string relatedForeignKey,
+            int parentId,
+            CancellationToken cancellationToken = default)
+            where T : class, new()
+        {
+            EntityMetadata metadata = new(typeof(T));
+            ValidateTableName(tableName, metadata);
+
+            string primaryKey =
+                EscapeIdentifier(metadata.GetColumnName(metadata.PrimaryKey));
+
+            string sql =
+                $"SELECT related.* FROM {EscapeIdentifier(metadata.TableName)} related " +
+                $"INNER JOIN {EscapeIdentifier(joinTable)} relation " +
+                $"ON related.{primaryKey} = relation.{EscapeIdentifier(relatedForeignKey)} " +
+                $"WHERE relation.{EscapeIdentifier(parentForeignKey)} = @id";
+
+            var result = new List<T>();
+
+            await using var connection = new NpgsqlConnection(_connectionString);
+            await connection.OpenAsync(cancellationToken);
+
+            await using var command = new NpgsqlCommand(sql, connection);
+            command.Parameters.AddWithValue("id", parentId);
+
+            await using var reader =
+                await command.ExecuteReaderAsync(cancellationToken);
+
+            var columns = GetColumns(reader);
+
+            while (await reader.ReadAsync(cancellationToken))
+            {
+                result.Add(MapRow<T>(reader, metadata, columns));
+            }
+
+            return result;
         }
     }
 }

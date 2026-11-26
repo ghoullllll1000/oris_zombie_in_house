@@ -1,4 +1,5 @@
 ﻿
+using System.Runtime.Intrinsics.X86;
 using System.Text.RegularExpressions;
 
 namespace Server.Validation
@@ -39,6 +40,10 @@ namespace Server.Validation
             else if (description.Length < 3 || description.Length > 1000)
             {
                 errors.Add("Описание должно содержать от 3 до 1000 символов.");
+            }
+            else if (!Regex.IsMatch(description, @"^[а-яА-ЯёЁa-zA-Z0-9\s.,!?():;'«»\-+/]+$"))
+            {
+                errors.Add("Описание содержит недопустимые символы.");
             }
 
             switch (type)
