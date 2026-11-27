@@ -132,13 +132,17 @@ namespace ORM
             int id,
             CancellationToken cancellationToken = default)
         {
-            string sql = $"DELETE FROM {EscapeIdentifier(tableName)} " + "WHERE \"id\" = @id";
+            string safeTableName = EscapeIdentifier(tableName);
+
+            string sql =
+                $"DELETE FROM {safeTableName} WHERE \"id\" = @id";
 
             await using var connection = new NpgsqlConnection(_connectionString);
             await connection.OpenAsync(cancellationToken);
-            await using var command = new NpgsqlCommand(sql, connection);
 
+            await using var command = new NpgsqlCommand(sql, connection);
             command.Parameters.AddWithValue("id", id);
+
             return await command.ExecuteNonQueryAsync(cancellationToken);
         }
 

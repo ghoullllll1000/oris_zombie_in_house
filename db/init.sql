@@ -54,3 +54,37 @@ INSERT INTO items (name, usage, effect) VALUES
     ('Доски', 'Защита проёмов', 'С их помощью можно забить окно или дверь, положив карточку досок на клетку с изображением двери или окна.'),
     ('Канистра с бензином', 'Машина', 'Нужна, чтобы заправить и завести красную машину для победы.'),
     ('Ключ', 'Машина', 'Нужен, чтобы завести красную машину для победы.');
+
+CREATE TABLE IF NOT EXISTS orm_test_entities (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    age INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS orm_test_characters (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS orm_test_children (
+    id SERIAL PRIMARY KEY,
+    character_id INTEGER NOT NULL REFERENCES orm_test_characters(id),
+    name TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS orm_test_profiles (
+    id SERIAL PRIMARY KEY,
+    character_id INTEGER UNIQUE NOT NULL REFERENCES orm_test_characters(id),
+    biography TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS orm_test_weapons (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS orm_test_character_weapons (
+    character_id INTEGER NOT NULL REFERENCES orm_test_characters(id),
+    weapon_id INTEGER NOT NULL REFERENCES orm_test_weapons(id),
+    PRIMARY KEY (character_id, weapon_id)
+);

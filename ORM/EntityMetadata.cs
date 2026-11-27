@@ -18,11 +18,9 @@ namespace ORM
 
         public EntityMetadata(Type entityType)
         {
-            TableAttribute? tableAttribute =
-                entityType.GetCustomAttribute<TableAttribute>();
+            TableAttribute? tableAttribute = entityType.GetCustomAttribute<TableAttribute>();
 
-            TableName = tableAttribute?.Name
-                ?? entityType.Name.ToLowerInvariant();
+            TableName = tableAttribute?.Name ?? entityType.Name.ToLowerInvariant();
 
             PropertyInfo[] allProperties = entityType.GetProperties(
                 BindingFlags.Public | BindingFlags.Instance)
@@ -49,11 +47,9 @@ namespace ORM
 
         public string GetColumnName(PropertyInfo property)
         {
-            ColumnAttribute? columnAttribute =
-                property.GetCustomAttribute<ColumnAttribute>();
+            ColumnAttribute? columnAttribute = property.GetCustomAttribute<ColumnAttribute>();
 
-            return columnAttribute?.Name
-                ?? property.Name.ToLowerInvariant();
+            return columnAttribute?.Name ?? property.Name.ToLowerInvariant();
         }
 
         private static bool IsScalar(Type type)
