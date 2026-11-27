@@ -16,11 +16,11 @@ public class OrmRelationsTests
     [TestInitialize]
     public async Task Setup()
     {
-        _connectionString = Environment.GetEnvironmentVariable("ZOMBIE_DB_CONNECTION_STRING") ?? "";
+        _connectionString = Environment.GetEnvironmentVariable("ZOMBIE_DB_CONNECTION_STRING_TEST") ?? "";
 
         if (string.IsNullOrWhiteSpace(_connectionString))
         {
-            Assert.Inconclusive("Не задана переменная ZOMBIE_DB_CONNECTION_STRING.");
+            Assert.Inconclusive("Не задана переменная ZOMBIE_DB_CONNECTION_STRING_TEST");
         }
 
         await TestDatabase.ResetAsync(_connectionString);

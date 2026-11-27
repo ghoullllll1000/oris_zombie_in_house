@@ -2,16 +2,43 @@ services:
   postgres:
     image: postgres:18
     container_name: zombie_postgres
+    command: ["postgres", "-p", "${ZOMBIE_DB_PORT}"]
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1234qwer!
-      POSTGRES_DB: zombie_db
+      POSTGRES_USER: ${ZOMBIE_DB_USER}
+      POSTGRES_PASSWORD: ${ZOMBIE_DB_PASSWD}
+      POSTGRES_DB: ${ZOMBIE_DB_NAME}
     ports:
-      - "5777:5432"
+      - "${ZOMBIE_DB_PORT}:${ZOMBIE_DB_PORT}"
     volumes:
       - pgdata:/var/lib/postgresql
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     restart: unless-stopped
-    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${ZOMBIE_DB_USER} -d ${ZOMBIE_DB_NAME} -p ${ZOMBIE_DB_PORT}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: zombie_server
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ZOMBIE_PORT: ${ZOMBIE_PORT}
+      ZOMBIE_HOST: ${ZOMBIE_HOST}
+      ZOMBIE_DB_HOST: ${ZOMBIE_DB_HOST}
+      ZOMBIE_DB_PORT: ${ZOMBIE_DB_PORT}
+      ZOMBIE_DB_USER: ${ZOMBIE_DB_USER}
+      ZOMBIE_DB_PASSWD: ${ZOMBIE_DB_PASSWD}
+      ZOMBIE_DB_NAME: ${ZOMBIE_DB_NAME}
+      ZOMBIE_DB_CONNECTION_STRING: ${ZOMBIE_DB_CONNECTION_STRING}
+    ports:
+      - "${ZOMBIE_PORT}:${ZOMBIE_PORT}"
+    restart: unless-stopped
+
 volumes:
   pgdata:

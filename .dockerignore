@@ -1,0 +1,8 @@
+**/bin/
+**/obj/
+pgdata/
+.git/
+.vs/
+*.user
+docker-compose.yml
+*.slnx
