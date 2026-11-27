@@ -6,12 +6,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
-<ItemGroup>
-		<Content Include="settings.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
 	<ItemGroup>
 		<None Include="static\**" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>

@@ -359,7 +359,6 @@
 
 .about-intro {
     color: #D9A76B;
-    font-family: 'Oswald', sans-serif;
     font-size: 27px;
     font-weight: 600;
     text-align: center;
@@ -385,7 +384,6 @@
 
 .features-panel h2 {
     color: #D9A76B;
-    font-family: 'Oswald', sans-serif;
     font-size: 25px;
     line-height: 1.2;
     margin: 0 0 25px;
@@ -453,14 +451,12 @@
 
 .about-block h2 {
     color: #D9A76B;
-    font-family: 'Oswald', sans-serif;
     font-size: 24px;
     font-weight: 600;
     margin: 0 0 10px;
 }
 
 .about-block p {
-    font-family: 'Oswald', sans-serif;
     font-size: 19px;
     line-height: 1.45;
     margin: 0 0 10px;
@@ -474,7 +470,6 @@
 .rules-list {
     margin: 0 0 12px;
     padding-left: 22px;
-    font-family: 'Oswald', sans-serif;
     font-size: 19px;
     line-height: 1.45;
 }
@@ -507,7 +502,6 @@
 
 .about-media figcaption {
     margin-top: 6px;
-    font-family: 'Oswald', sans-serif;
     font-size: 15px;
     color: #CDC8B7;
 }

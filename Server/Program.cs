@@ -1,29 +1,42 @@
 ﻿using Framework;
 using Framework.Authentication;
 using Server.Services.Authentication;
-using System.Text.Json;
 
-if (!File.Exists("settings.json"))
+string? port = Environment.GetEnvironmentVariable("ZOMBIE_PORT");
+if (port == null)
 {
-    Console.WriteLine("Ошибка: файл settings.json не найден.");
-    Console.ReadLine();
+    Console.WriteLine("Переменная окружения ZOMBIE_PORT не задана, используется значение по умолчанию = '9999'");
+    port = "9999";
+}
+
+string? host = Environment.GetEnvironmentVariable("ZOMBIE_HOST");
+if (host == null)
+{
+    Console.WriteLine("Переменная окружения ZOMBIE_HOST не задана, используется значение по умолчанию = 'localhost'");
+    host = "localhost";
+}
+
+string? connectionString = Environment.GetEnvironmentVariable("ZOMBIE_DB_CONNECTION_STRING");
+if (connectionString == null)
+{
+    Console.WriteLine("Ошибка: Переменная окружения ZOMBIE_DB_CONNECTION_STRING не задана, завершение работы сервера");
     return;
 }
 
-string settingJson = await File.ReadAllTextAsync("settings.json");
+Console.WriteLine($"ZOMBIE_PORT={port}");
+Console.WriteLine($"ZOMBIE_HOST={host}");
+Console.WriteLine($"ZOMBIE_DB_CONNECTION_STRING=\"{connectionString}\"");
 
-Settings? setting = JsonSerializer.Deserialize<Settings>(settingJson);
-
-if (setting == null)
+Settings? settings = new Settings
 {
-    Console.WriteLine("Ошибка: не удалось прочитать settings.json.");
-    Console.ReadLine();
-    return;
-}
+    Port = port,
+    Host = host,
+    ConnectionString = connectionString
+};
 
 IUserSessionService userSessionService = new UserSessionService();
 
-HttpServer server = new HttpServer(setting, userSessionService);
+HttpServer server = new HttpServer(settings, userSessionService);
 
 Task serverTask = server.Start();
 
