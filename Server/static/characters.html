@@ -6,12 +6,13 @@
     <base href="/">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Персонажи</title>
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="images/icon-zombie.png" type="image/x-icon">
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap"
-          rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
@@ -38,35 +39,12 @@
     <main class="page-container">
         <h1 class="admin-title">Персонажи</h1>
         <div class="page-content">
-            <section class="characters-grid">
-                $foreach character in Characters
-                <article class="character-card">
-                    <div class="character-avatar">
-                        <img src="${Image}" alt="${Name}">
-                    </div>
-                    <div class="character-info">
-                        <h3>${Name}</h3>
-                        <p>${Feature}</p>
-                    </div>
-                </article>
-                $endfor
-
-                $foreach monster in Monsters
-                <article class="character-card">
-                    <div class="character-avatar">
-                        <img src="${Image}" alt="${Name}">
-                    </div>
-                    <div class="character-info">
-                        <h3>${Name}</h3>
-                        <p>${Behavior}</p>
-                    </div>
-                </article>
-                $endfor
+            <section class="characters-grid" id="characters-grid" data-endpoint="/home/characters-filter">
             </section>
 
             <aside class="filter-panel">
                 <h2>ФИЛЬТР</h2>
-                <form action="/home/characters" method="get">
+                <form action="/home/characters" method="get" id="characters-filter-form">
                     <label for="char-type">Тип персонажа</label>
                     <select id="char-type" name="char-type">
                         <option value="">---</option>
@@ -90,6 +68,8 @@
             </aside>
         </div>
     </main>
+
+    <script src="scripts/filter.js"></script>
 </body>
 
 </html>

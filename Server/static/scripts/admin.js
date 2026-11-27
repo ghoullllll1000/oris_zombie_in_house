@@ -67,7 +67,7 @@
         const dynamicField = document.getElementById('dynamic-field-input');
         const name = document.getElementById('name');
         const regexName = /^[а-яА-ЯёЁa-zA-Z0-9 -]+$/;
-        const descriptionRegex = /^[а-яА-ЯёЁa-zA-Z0-9\s.,!?():;"'«»\-+/]+$/;
+        const descriptionRegex = /^[а-яА-ЯёЁa-zA-Z0-9\s.,!?():;"'«»\-—–+/]+$/;
 
         if (!typeSelect.value) {
             event.preventDefault();

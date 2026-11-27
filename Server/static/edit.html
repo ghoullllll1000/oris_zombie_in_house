@@ -5,7 +5,7 @@
     <base href="/">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Админ-панель</title>
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="images/icon-zombie.png" type="image/x-icon">
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,7 +45,7 @@
                             <th>№</th>
                             <th>Название</th>
                             <th>Тип</th>
-                            <th>Особенности</th>
+                            <th>Описание</th>
                             <th>Действия</th>
                         </tr>
                     </thead>
@@ -85,12 +85,13 @@
                     <input type="text" id="name" name="name" value="${Name}">
 
                     <label for="type">Тип</label>
-                    <select id="type" name="type">
+                    <select id="type" disabled>
                         <option value="character">Персонаж</option>
                         <option value="monster">Монстр</option>
                         <option value="weapon">Оружие</option>
                         <option value="item">Предмет</option>
                     </select>
+                    <input type="hidden" id="type-hidden" name="type" value="${EntityType}">
 
                     <div id="dynamic-field-container">
                         <label id="dynamic-field-label" for="dynamic-field-input">
@@ -98,8 +99,8 @@
                         </label>
                     </div>
 
-                    <label for="characteristics">Особенности</label>
-                    <input type="text" id="characteristics" name="description"
+                    <label for="characteristics">Описание</label>
+                    <input type="text" id="description" name="description"
                            value="${Description}">
 
                     <button type="submit" class="add-button">

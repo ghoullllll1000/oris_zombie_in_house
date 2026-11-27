@@ -97,7 +97,8 @@
     margin-top: 10px;
 }
 
-.not-found {
+.not-found,
+.no-access {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -107,6 +108,13 @@
     text-decoration: none;
     color: #CDC8B7;
     font-size: 35px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.no-access a{
+    color: #CDC8B7;
+    font-size: 24px;
     display: inline-flex;
     align-items: center;
 }
@@ -223,13 +231,15 @@
     font-weight: 500;
     height: 78px;
     padding: 15px 20px;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 
 .admin-table td {
     height: 67px;
     padding: 12px 20px;
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 
 .admin-table tbody tr:nth-child(odd) {
@@ -541,7 +551,7 @@
     width: 105px;
     height: 120px;
     flex-shrink: 0;
-    background-color: #3a342f;
+    background-color: #FFFED2;
     border: 2px solid #17110D;
     border-radius: 6px;
     overflow: hidden;
@@ -716,21 +726,6 @@
 
 .login-input input::placeholder {
     color: #B9A994;
-}
-
-.remember-me {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 17px;
-    cursor: pointer;
-    color: #B9A994;
-}
-
-.remember-me input {
-    accent-color: #BD7436;
-    width: 17px;
-    height: 17px;
 }
 
 .login-button {

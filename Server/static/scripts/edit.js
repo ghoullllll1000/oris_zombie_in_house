@@ -4,7 +4,7 @@
     const container = document.getElementById('dynamic-field-container');
     const label = document.getElementById('dynamic-field-label');
     const form = document.querySelector('.add-panel form');
-    const description = document.getElementById('characteristics');
+    const description = document.getElementById('description');
     const name = document.getElementById('name');
 
     const currentType = document.getElementById('current-type').value;
@@ -70,6 +70,11 @@
     }
 
     typeSelect.value = currentType;
+
+    const typeHidden = document.getElementById('type-hidden');
+    if (typeHidden)
+        typeHidden.value = typeSelect.value;
+    
     updateField();
 
     typeSelect.addEventListener('change', updateField);
@@ -77,7 +82,7 @@
     form.addEventListener('submit', function (event) {
         const dynamicField = document.getElementById('dynamic-field-input');
         const regexName = /^[а-яА-ЯёЁa-zA-Z0-9 -]+$/;
-        const descriptionRegex = /^[а-яА-ЯёЁa-zA-Z0-9\s.,!?():;"'«»\-+/]+$/;
+        const descriptionRegex = /^[а-яА-ЯёЁa-zA-Z0-9\s.,!?():;"'«»\-—–+/]+$/;
 
         if (!dynamicField || !dynamicField.value) {
             event.preventDefault();

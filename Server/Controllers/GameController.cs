@@ -19,7 +19,10 @@ namespace Server.Controllers
         public IHttpResponseTypeResult About() => RenderTemplate("static/about.html", new { IsAdmin = IsAdminAuthenticated() });
 
         [Get("characters")]
-        public async Task<IHttpResponseTypeResult> Characters()
+        public async Task<IHttpResponseTypeResult> Characters() => RenderTemplate("static/characters.html", new { IsAdmin = IsAdminAuthenticated()});
+
+        [Get("characters-filter")]
+        public async Task<IHttpResponseTypeResult> CharactersFilter()
         {
             string? charType = Context.Request.QueryString["char-type"]?.Trim().ToLowerInvariant();
             string? ability = Context.Request.QueryString["ability"]?.Trim().ToLowerInvariant();
@@ -37,13 +40,9 @@ namespace Server.Controllers
             if (!string.IsNullOrEmpty(charType))
             {
                 if (charType == "survivor")
-                {
                     monsters = Enumerable.Empty<Monster>();
-                }
                 else if (charType == "zombie")
-                {
                     characters = Enumerable.Empty<Character>();
-                }
             }
 
             if (!string.IsNullOrEmpty(ability))
@@ -65,32 +64,27 @@ namespace Server.Controllers
                 };
             }
 
-            var characterItems = characters.Select(c => new
+            var characterItems = characters.Select(c => new Dictionary<string, object?>
             {
-                c.Id,
-                c.Name,
-                c.Health,
-                c.Feature,
-                Image = ResolveCharacterImage(c.Name)
+                ["id"] = c.Id,
+                ["name"] = c.Name,
+                ["description"] = c.Feature,
+                ["image"] = ResolveCharacterImage(c.Name)
             }).ToList();
 
-            var monsterItems = monsters.Select(m => new
+            var monsterItems = monsters.Select(m => new Dictionary<string, object?>
             {
-                m.Id,
-                m.Name,
-                m.Type,
-                m.Behavior,
-                Image = ResolveMonsterImage(m.Name)
+                ["id"] = m.Id,
+                ["name"] = m.Name,
+                ["description"] = m.Behavior,
+                ["image"] = ResolveMonsterImage(m.Name)
             }).ToList();
 
-            var model = new
+            return Json(new Dictionary<string, object?>
             {
-                IsAdmin = IsAdminAuthenticated(),
-                Characters = characterItems,
-                Monsters = monsterItems
-            };
-
-            return RenderTemplate("static/characters.html", model);
+                ["characters"] = characterItems,
+                ["monsters"] = monsterItems
+            });
         }
 
         [Get("items")]
@@ -143,7 +137,7 @@ namespace Server.Controllers
                 };
             }
 
-            var weaponItems = weapons.Select(w => new
+            var weaponList = weapons.Select(w => new
             {
                 w.Id,
                 w.Name,
@@ -164,7 +158,8 @@ namespace Server.Controllers
             var model = new
             {
                 IsAdmin = IsAdminAuthenticated(),
-                Weapons = weaponItems,
+                IsEmpty = (weaponList.Count + itemList.Count) == 0,
+                Weapons = weaponList,
                 Items = itemList
             };
 
@@ -186,7 +181,7 @@ namespace Server.Controllers
             "надя" => "images/nadya.png",
             "макс" => "images/max.png",
             "борис" or "боря" => "images/boris.png",
-            _ => "images/user-round.svg"
+            _ => "images/person.svg"
         };
 
         private static string ResolveMonsterImage(string? name)
@@ -198,7 +193,7 @@ namespace Server.Controllers
                 "дьявольские псы" or "дьявольский пес" => "images/dog.png",
                 "пауки-мутанты" or "паук-мутант" => "images/spider.png",
                 "болотный ужас" => "images/boss.png",
-                _ => "images/zombie.png"
+                _ => "images/monster.png"
             };
         }
 
@@ -215,7 +210,7 @@ namespace Server.Controllers
                 "дробовик" => "images/shotgun.png",
                 "граната" => "images/grenade.png",
                 "гранатомет" => "images/flamethrower.png",
-                _ => "images/gun.png"
+                _ => "images/weapon.png"
             };
         }
 
@@ -228,7 +223,7 @@ namespace Server.Controllers
                 "доски" => "images/boards.png",
                 "канистра с бензином" or "канистра" => "images/canister.png",
                 "ключ" => "images/key.png",
-                _ => "images/pharmacy.png"
+                _ => "images/item.png"
             };
         }
     }

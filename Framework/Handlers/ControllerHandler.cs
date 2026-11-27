@@ -174,8 +174,7 @@ namespace Framework.Handlers
 
                 if (!IsAuthorized(context, controllerType, targetMethod))
                 {
-                    response.StatusCode = 401;
-                    response.Close();
+                    await SendUnauthorized(response);
                     return;
                 }
 
@@ -237,6 +236,24 @@ namespace Framework.Handlers
             response.ContentType = "text/html; charset=utf-8";
 
             string errorFilePath = Path.Combine(Directory.GetCurrentDirectory(), "static", "404.html");
+
+            if (File.Exists(errorFilePath))
+            {
+                byte[] buffer = await File.ReadAllBytesAsync(errorFilePath);
+                response.ContentLength64 = buffer.Length;
+                await response.OutputStream.WriteAsync(buffer);
+                await response.OutputStream.FlushAsync();
+            }
+
+            response.Close();
+        }
+
+        private async Task SendUnauthorized(HttpListenerResponse response)
+        {
+            response.StatusCode = 401;
+            response.ContentType = "text/html; charset=utf-8";
+
+            string errorFilePath = Path.Combine(Directory.GetCurrentDirectory(), "static", "401.html");
 
             if (File.Exists(errorFilePath))
             {

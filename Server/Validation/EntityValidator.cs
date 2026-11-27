@@ -41,7 +41,7 @@ namespace Server.Validation
             {
                 errors.Add("Описание должно содержать от 3 до 1000 символов.");
             }
-            else if (!Regex.IsMatch(description, @"^[а-яА-ЯёЁa-zA-Z0-9\s.,!?():;'«»\-+/]+$"))
+            else if (!Regex.IsMatch(description, @"^[а-яА-ЯёЁa-zA-Z0-9\s.,!?():;'«»\-—–+/]+$"))
             {
                 errors.Add("Описание содержит недопустимые символы.");
             }
